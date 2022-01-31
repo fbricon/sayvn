@@ -17,8 +17,8 @@ pullargs () {
 orig_mvnw_args=$(pullargs "$@") # Will store all the arguments sent to ./sayvnw
 
 mvn_exec="mvn" # The maven executable
-if [ -f "./mvn" ]; then
-    mvn_exec="./mvn" # If the wrapper is found, use it
+if [ -f "./mvnw" ]; then
+    mvn_exec="./mvnw" # If the wrapper is found, use it
 elif [ -x "$(command -v mvnd)" ]; then
     mvn_exec="mvnd" # If the maven daemon is found, use it
 fi
