@@ -1,0 +1,35 @@
+#!/usr/bin/env sh
+# License: Apache 2.0
+# Description: Sayvn is a Wrapper for Maven that notifies you via the OSX say command whether a task failed or succeeded.
+# Sayvn is a port of Sam Edwards' Saydle wrapper for Gradle
+# Orginal Saydle Source: https://github.com/handstandsam/saydle/
+# Version: 1.0.0-alpha01
+
+# Customizations
+success_phrase="Success"
+failed_phrase="Failed"
+voice="Alex"
+
+# Sayvn Script
+pullargs () {
+    for i do printf %s "$i " ; done
+}
+orig_mvnw_args=$(pullargs "$@") # Will store all the arguments sent to ./sayvnw
+
+mvn_exec="mvn" # The maven executable
+if [ -f "./mvn" ]; then
+    mvn_exec="./mvn" # If the wrapper is found, use it
+elif [ -x "$(command -v mvnd)" ]; then
+    mvn_exec="mvnd" # If the maven daemon is found, use it
+fi
+
+mvn_cmd="$mvn_exec $orig_mvnw_args"              # Maven Command
+success_cmd="say -v $voice \"$success_phrase\""        # On Success
+failed_cmd="say -v $voice \"$failed_phrase\""          # On Failure
+full_cmd="$mvn_cmd && $success_cmd || $failed_cmd" # Command to Execute
+
+echo "Executing: $mvn_cmd"
+echo "Sayvn will say 🔊 \"$success_phrase\" ✅ or \"$failed_phrase\" ❌ on completion."
+
+# Execute
+eval $full_cmd
